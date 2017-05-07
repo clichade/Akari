@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import aima.core.util.datastructure.Pair;
+import com.sun.org.apache.xpath.internal.SourceTree;
 
 public class Akari {
 	/**
@@ -310,7 +311,12 @@ public class Akari {
      /*
 	 */
 	public void printCurrentState() {
-		System.out.println(" ____________");
+
+		for (int i= 0 ;i < getNcols();i++)
+			System.out.print(" -");
+		System.out.println();
+
+
 		for (int fila = 0; fila < getAkariState().length; fila++) {
 			System.out.print("|");
 			for (int col = 0; col < getAkariState()[0].length; col++) {
@@ -334,7 +340,112 @@ public class Akari {
 			}
 			System.out.println("|");
 		}
-		System.out.println(" ------------");
+
+		for (int i= 0 ;i < getNcols();i++){
+			System.out.print(" -");
+		}
+		System.out.println();
+
+	}
+
+	/**
+	 *
+	 * @return the number of light and lantern squares as an integuer
+	 */
+	public int getTotalLight(){
+		int light = 0;
+		for(int row=0; row<getNrows();row++){
+			for (int col=0;col<getNcols();col++){
+				int state = getAkariState()[row][col];
+				if (state == L || state == I)
+					light++;
+			}
+		}
+		return light;
+	}
+
+
+	public int OnlyOptionHeuristic(){
+		int puntuation = 0;
+		for(int row=0; row<getNrows();row++){
+			for (int col=0;col<getNcols();col++){
+				//if (isLight(row,col))
+					//puntuation ++;
+				if(isConditionBlock(row,col))
+					puntuation += onlyOptionBlock_Satisfied(row,col);
+
+			}
+		}
+		return puntuation;
+	}
+
+
+	/**
+	 * check if the requirement block is satisfied and only has one possible configuration
+	 * it both requirements are true return 4 points, else return 0
+	 * @param row
+	 * @param col
+	 * @return
+	 */
+	public int onlyOptionBlock_Satisfied(int row,int col){
+		int barriers = 0;
+		int lanterns = 0;
+		int brequirement;
+		int puntuation = 0;
+
+		brequirement = boardState[row][col];
+		//check the left
+		if (col > 0){
+			if (boardState[row][col-1] == B)
+				barriers++;
+			else if (boardState[row][col-1] == L) {
+				lanterns++;
+			}
+		}
+		else barriers++;
+
+		//check the right
+		if (col < getNcols() -1){
+			if (boardState[row][col +1] == B)
+				barriers++;
+			else if (boardState[row][col +1] == L) {
+				lanterns++;
+			}
+		}
+		else barriers++;
+
+		//check the bottom
+		if (row < getNrows() -1){
+			if (boardState[row +1][col] == B)
+				barriers++;
+			else if (boardState[row +1][col] == L) {
+
+				lanterns++;
+			}
+		}
+		else barriers++;
+
+		//check the top
+		if (row > 0){
+			if (boardState[row -1][col] == B)
+				barriers++;
+			else if (boardState[row -1][col] == L) {
+				lanterns++;
+			}
+		}
+		else barriers++;
+
+
+		if (lanterns == brequirement) {
+			puntuation += 3;
+			if (lanterns + barriers == 4) {//configuración unica
+				puntuation += 4;
+			}
+		}
+
+		return puntuation;
+
+
 
 	}
 
