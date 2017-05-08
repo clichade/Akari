@@ -33,22 +33,17 @@ public class AkariGenericDemo {
 	 * luces - 3 en una casilla indica que las adyacentes solo pueden tener 3
 	 * luces - 4 en una casilla indica que las adyacentes deben tener las 4
 	 * luces adyacentes
-	 * { B, 1, V, V, B, B },
-		{ B, V, V, V, V, 0 },
-		{ V, V, V, B, V, V },
-		{ V, V, V, V, V, V },
-		{ V, V, B, 1, V, V } };
+	 *
 	 * 
 	 */
 
 	// Variaci�n de nivel simple First Step 4 con soluci�n optima en 5 pasos
 	private static int[][] AKARI = {
-			{ V, V, V, V, B, B },
-			{ B, 1, V, V, V, 2 },
+			{ B, 1, V, V, B, B },
+			{ B, V, V, V, V, 0 },
 			{ V, V, V, B, V, V },
 			{ V, V, V, V, V, V },
 			{ V, V, B, 1, V, V } };
-
 	/**
 	 * @param args
 	 */
@@ -84,8 +79,8 @@ public class AkariGenericDemo {
 				AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
 				new BreadthFirstSearch(new GraphSearch()));*/
 
-	/*	System.out.println("\n<------------------------>");
-		System.out.println("Heur�sticaA con Avaricioso (Greedy Best First (Graph)");
+		System.out.println("\n<------------------------>");
+		System.out.println("LightRatio con Avaricioso (Greedy Best First (Graph)");
 		System.out.println("<------------------------>");
 		Akari = new Akari(AKARI);
 		uninformedAndInformedSearchDemo(Akari, AkariFunctionFactory.getActionsFunction(),
@@ -93,23 +88,25 @@ public class AkariGenericDemo {
 				new GreedyBestFirstSearch(new GraphSearch(), new HeuristicaLightRatio()));
 
 		System.out.println("\n<------------------------>");
-		System.out.println("Heur�sticaA con A* (Graph)");
+		System.out.println("LightRatio con A* (Graph)");
 		System.out.println("<------------------------>");
 		Akari = new Akari(AKARI);
 		uninformedAndInformedSearchDemo(Akari, AkariFunctionFactory.getActionsFunction(),
 				AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
-				new AStarSearch(new GraphSearch(), new HeuristicaLightRatio()));*/
+				new AStarSearch(new GraphSearch(), new HeuristicaLightRatio()));
 
 		 System.out.println("\n<------------------------>");
-		 System.out.println("Heur�sticaB con Avaricioso (Greedy Best First (Graph)");
+		 System.out.println("OnlyOptionsBlock con Avaricioso (Greedy Best First (Graph)");
 		 System.out.println("<------------------------>");
 		 Akari = new Akari(AKARI);
 		 uninformedAndInformedSearchDemo(Akari,
 		 AkariFunctionFactory.getActionsFunction(),
 		 AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
 		 new GreedyBestFirstSearch(new GraphSearch(), new HeuristicaOnlyOptionBlocks()));
+
+
 		 System.out.println("\n<------------------------>");
-		 System.out.println("Heur�sticaB con A* (Graph)");
+		 System.out.println("OnlyOptionsBlock con A* (Graph)");
 		 System.out.println("<------------------------>");
 		 Akari = new Akari(AKARI);
 		 uninformedAndInformedSearchDemo(Akari,
@@ -117,28 +114,26 @@ public class AkariGenericDemo {
 		 AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
 		 new AStarSearch(new GraphSearch(), new HeuristicaOnlyOptionBlocks()));
 
+		System.out.println("\n<------------------------>");
+		 System.out.println("ForbiddenPath con Avaricioso (Greedy Best First (Graph)");
+		 System.out.println("<------------------------>");
+		 Akari = new Akari(AKARI);
+		 uninformedAndInformedSearchDemo(Akari,
+		 AkariFunctionFactory.getActionsFunction(),
+		 AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
+		 new GreedyBestFirstSearch(new GraphSearch(), new HeuristicaForbiddenPath()));
+
+		 System.out.println("\n<------------------------>");
+		 System.out.println("ForbiddenPath con A* (Graph)");
+		 System.out.println("<------------------------>");
+		 Akari = new Akari(AKARI);
+		 uninformedAndInformedSearchDemo(Akari,
+		 AkariFunctionFactory.getActionsFunction(),
+		 AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
+		 new AStarSearch(new GraphSearch(), new HeuristicaForbiddenPath()));
+
 		// System.out.println("\n<------------------------>");
-		// System.out.println("Heur�sticaC con Avaricioso (Greedy Best First
-		// (Graph)");
-		// System.out.println("<------------------------>");
-		// Akari = new Akari(AKARI);
-		// uninformedAndInformedSearchDemo(Akari,
-		// AkariFunctionFactory.getActionsFunction(),
-		// AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
-		// new GreedyBestFirstSearch(new GraphSearch(), new HeuristicaC()));
-		//
-		// System.out.println("\n<------------------------>");
-		// System.out.println("Heur�sticaC con A* (Graph)");
-		// System.out.println("<------------------------>");
-		// Akari = new Akari(AKARI);
-		// uninformedAndInformedSearchDemo(Akari,
-		// AkariFunctionFactory.getActionsFunction(),
-		// AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
-		// new AStarSearch(new GraphSearch(), new HeuristicaC()));
-		//
-		// System.out.println("\n<------------------------>");
-		// System.out.println("Heur�sticaD con Avaricioso (Greedy Best First
-		// (Graph)");
+		 //System.out.println("Heur�sticaD con Avaricioso (Greedy Best First (Graph)");
 		// System.out.println("<------------------------>");
 		// Akari = new Akari(AKARI);
 		// uninformedAndInformedSearchDemo(Akari,

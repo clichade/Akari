@@ -12,7 +12,7 @@ public class HeuristicaLightRatio implements HeuristicFunction {
 		Akari akari = (Akari) state;
 		int size = akari.getNcols()*akari.getNrows();
 
-		return (akari.getTotalLight()/size)*100;
+		return (size/akari.getTotalLight())*100;
 	}
 
 }

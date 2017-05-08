@@ -369,14 +369,118 @@ public class Akari {
 		int puntuation = 0;
 		for(int row=0; row<getNrows();row++){
 			for (int col=0;col<getNcols();col++){
-				//if (isLight(row,col))
-					//puntuation ++;
+				if (isEmpty(row,col ))
+					puntuation += 10;
+
+				if (isLight(row,col))
+					puntuation += 5;
+
 				if(isConditionBlock(row,col))
 					puntuation += onlyOptionBlock_Satisfied(row,col);
 
 			}
 		}
 		return puntuation;
+	}
+
+	public int ForbiddenPathHeuristic(){
+		int puntuation = 0;
+		for(int row=0; row<getNrows();row++){
+			for (int col=0;col<getNcols();col++){
+				if (isEmpty(row,col))
+					puntuation += 5;
+				else if (isLight(row,col))
+					puntuation += 2;
+				else if (satisfiedConditionBlock(row,col))
+					puntuation += 0;
+				else if (overloadConditionBlock(row,col))
+					puntuation += 500;
+
+
+			}
+		}
+		return puntuation;
+	}
+
+
+	/**
+	 *
+	 * @param row
+	 * @param col
+	 *
+	 * @return true if the block has more adjacent lanterns than his condition, false on the contrary
+	 */
+	public boolean overloadConditionBlock(int row, int col){
+		int adjacent_lanterns = 0;
+		int puntuation = 0;
+		boolean overload = false;
+
+
+		// Left
+		if (col > 0) {
+			if (isLantern(row, col - 1)) {
+				adjacent_lanterns++;
+			}
+		}
+		// Right
+		if (col < getNcols() -1) {
+			if (isLantern(row,col + 1)) {
+				adjacent_lanterns++;
+			}
+		}
+		// Top
+		if (row > 0) {
+			if (isLantern(row - 1, col)) {
+				adjacent_lanterns++;
+			}
+		}
+		// Bot
+		if (row < getNrows() -1) {
+			if (isLantern(row + 1, col)) {
+				adjacent_lanterns++;
+			}
+		}
+		if (boardState[row][col] < adjacent_lanterns) {
+			overload = true;
+		}
+		return overload;
+
+	}
+
+	public boolean satisfiedConditionBlock(int row, int col){
+		int adjacent_lanterns = 0;
+		boolean satisfied = false;
+
+
+		// Left
+		if (col > 0) {
+			if (isLantern(row, col - 1)) {
+				adjacent_lanterns++;
+			}
+		}
+		// Right
+		if (col < getNcols() -1) {
+			if (isLantern(row,col + 1)) {
+				adjacent_lanterns++;
+			}
+		}
+		// Top
+		if (row > 0) {
+			if (isLantern(row - 1, col)) {
+				adjacent_lanterns++;
+			}
+		}
+		// Bot
+		if (row < getNrows() -1) {
+			if (isLantern(row + 1, col)) {
+				adjacent_lanterns++;
+			}
+		}
+		if (boardState[row][col] == adjacent_lanterns) {
+			satisfied = true;
+		}
+		return satisfied;
+
 	}
 
 
@@ -391,7 +495,7 @@ public class Akari {
 		int barriers = 0;
 		int lanterns = 0;
 		int brequirement;
-		int puntuation = 0;
+		int puntuation = 7;
 
 		brequirement = boardState[row][col];
 		//check the left
@@ -437,9 +541,9 @@ public class Akari {
 
 
 		if (lanterns == brequirement) {
-			puntuation += 3;
+			puntuation = 2;
 			if (lanterns + barriers == 4) {//configuración unica
-				puntuation += 4;
+				puntuation = 0;
 			}
 		}
 
