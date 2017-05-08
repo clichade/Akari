@@ -442,16 +442,21 @@ public class Akari {
 	/**
 	 *
 	 */
-	void auxMinCondHeuristic(LinkedList<Pair<Integer,Integer>> List, int row, int col){
-
+	void auxMinCondHeuristic(LinkedList<Pair<Integer,Integer>> List, int row, int col, LinkedList<Integer> freqList){
+		int index, freq;
 		// Left
 		if (col > 0) {
 			if (isEmpty(row,col-1)) {
 				Pair<Integer,Integer> a =new Pair<>(row,col-1);
 				if(List.contains(a)){
-					List.remove(a);
+					index = List.indexOf(a);
+					freq=freqList.get(index);
+					freqList.set(index,freq++);
 				}
-				else List.addLast(a);
+				else {
+					List.addLast(a);
+					freqList.addLast(1);
+				}
 			}
 		}
 		// Right
@@ -459,29 +464,44 @@ public class Akari {
 			if (isEmpty(row,col+1)) {
 				Pair<Integer,Integer> a =new Pair<Integer,Integer>(row,col+1);
 				if(List.contains(a)){
-					List.remove(a);
+					index = List.indexOf(a);
+					freq=freqList.get(index);
+					freqList.set(index,freq++);
 				}
-				else List.addLast(a);
+				else {
+					List.addLast(a);
+					freqList.addLast(1);
+				}
 			}
 		}
 		// Top
 		if (row > 0) {
-			if (isEmpty(row - 1,col)) {
+			if (isEmpty(row-1,col)) {
 				Pair<Integer,Integer> a =new Pair<Integer,Integer>(row -1,col);
 				if(List.contains(a)){
-					List.remove(a);
+					index = List.indexOf(a);
+					freq=freqList.get(index);
+					freqList.set(index,freq++);
 				}
-				else List.addLast(a);
+				else {
+					List.addLast(a);
+					freqList.addLast(1);
+				}
 			}
 		}
 		// Bot
 		if (row < getNrows() -1) {
-			if (isEmpty(row +1,col)) {
+			if (isEmpty(row+1,col)) {
 				Pair<Integer,Integer> a =new Pair<Integer,Integer>(row +1,col);
 				if(List.contains(a)){
-					List.remove(a);
+					index = List.indexOf(a);
+					freq=freqList.get(index);
+					freqList.set(index,freq++);
 				}
-				else List.addLast(a);
+				else {
+					List.addLast(a);
+					freqList.addLast(0);
+				}
 			}
 		}
 
@@ -495,29 +515,34 @@ public class Akari {
 	 *
 	 * @return
 	 */
-	public int MinCondHeursitic() {
-		int steps = 0;
-		LinkedList<Pair<Integer, Integer>> List = new LinkedList<Pair<Integer, Integer>>();
-		for (int row = 0; row < getNrows(); row++) {
-			for (int col = 0; col < getNcols(); col++) {
-				if (isConditionBlock(row, col) && !satisfiedConditionBlock(row, col)) {
-					steps += remainingLanternsCB(row, col);
-					//auxMinCondHeuristic(List, row, col);
+		public int MinCondHeursitic() {
+			int maxRemainingLanterns = 0;
+			int commonSpots = 0;
+			LinkedList<Pair<Integer, Integer>> List = new LinkedList<Pair<Integer, Integer>>();
+			LinkedList<Integer> freqList = new LinkedList<Integer>();
+			for (int row = 0; row < getNrows(); row++) {
+				for (int col = 0; col < getNcols(); col++) {
+					if (isConditionBlock(row, col) && !satisfiedConditionBlock(row, col)) {
+						maxRemainingLanterns += remainingLanternsCB(row, col);
+						auxMinCondHeuristic(List, row, col, freqList);
+					}
 				}
+
 			}
-
+			for(int i = 0; i <freqList.size();i++){
+				commonSpots+=freqList.get(i);
+			}
+			return maxRemainingLanterns - commonSpots;
 		}
-		return List.size();
-	}
 
 
-	/**
-	 * suponiendo que el bloque sea un bloque de condición y no esté satisfecho devuelve
-	 * el número de linternas que todavía faltan por poner
-	 * @param row
-	 * @param col
-	 * @return
-	 */
+		/**
+		 * suponiendo que el bloque sea un bloque de condición y no esté satisfecho devuelve
+		 * el número de linternas que todavía faltan por poner
+		 * @param row
+		 * @param col
+		 * @return
+		 */
 	public int remainingLanternsCB(int row, int col){
 		int adjacent_lanterns = 0;
 
@@ -551,34 +576,35 @@ public class Akari {
 	public boolean satisfiedConditionBlock(int row, int col){
 		int adjacent_lanterns = 0;
 		boolean satisfied = false;
+		if(isConditionBlock(row, col)) {
 
-
-		// Left
-		if (col > 0) {
-			if (isLantern(row, col - 1)) {
-				adjacent_lanterns++;
+			// Left
+			if (col > 0) {
+				if (isLantern(row, col - 1)) {
+					adjacent_lanterns++;
+				}
 			}
-		}
-		// Right
-		if (col < getNcols() -1) {
-			if (isLantern(row,col + 1)) {
-				adjacent_lanterns++;
+			// Right
+			if (col < getNcols() - 1) {
+				if (isLantern(row, col + 1)) {
+					adjacent_lanterns++;
+				}
 			}
-		}
-		// Top
-		if (row > 0) {
-			if (isLantern(row - 1, col)) {
-				adjacent_lanterns++;
+			// Top
+			if (row > 0) {
+				if (isLantern(row - 1, col)) {
+					adjacent_lanterns++;
+				}
 			}
-		}
-		// Bot
-		if (row < getNrows() -1) {
-			if (isLantern(row + 1, col)) {
-				adjacent_lanterns++;
+			// Bot
+			if (row < getNrows() - 1) {
+				if (isLantern(row + 1, col)) {
+					adjacent_lanterns++;
+				}
 			}
-		}
-		if (boardState[row][col] == adjacent_lanterns) {
-			satisfied = true;
+			if (boardState[row][col] == adjacent_lanterns) {
+				satisfied = true;
+			}
 		}
 		return satisfied;
 
