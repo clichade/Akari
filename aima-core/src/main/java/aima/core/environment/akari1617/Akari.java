@@ -1,10 +1,11 @@
 package aima.core.environment.akari1617;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+import aima.core.probability.proposition.IntegerSumProposition;
 import aima.core.util.datastructure.Pair;
-import com.sun.org.apache.xpath.internal.SourceTree;
+import aima.core.util.math.Matrix;
+import com.sun.org.apache.xerces.internal.impl.xpath.XPath;
 
 public class Akari {
 	/**
@@ -46,7 +47,7 @@ public class Akari {
 	 * @return the number of rows 
 	 */
 	public int getNrows() {
-		return getAkariState().length ;
+		return boardState.length ;
 	}
 
 	/**
@@ -54,7 +55,7 @@ public class Akari {
 	 * @return del number of columns
 	 */
 	public int getNcols() {
-		return getAkariState()[0].length ;
+		return boardState[0].length ;
 	}
 
 	/**
@@ -62,7 +63,7 @@ public class Akari {
 	 * @return true if it is a lantern in the spot
 	 */
 	public boolean isLantern(int row, int col) {
-		return getAkariState()[row][col] == L;
+		return boardState[row][col] == L;
 	}
 
 	/**
@@ -71,7 +72,7 @@ public class Akari {
 	 * @return true if the place has light but not a lantern
 	 * */
 	public boolean isLight(int row, int col) {
-		return getAkariState()[row][col] == I;
+		return boardState[row][col] == I;
 	}
 
 	/**
@@ -79,7 +80,7 @@ public class Akari {
 	 * @return return true if is a no requirement block
 	 */
 	public boolean isBlock(int fil, int col) {
-		return getAkariState()[fil][col] == B;
+		return boardState[fil][col] == B;
 	}
 
 	/**
@@ -87,7 +88,7 @@ public class Akari {
 	 * @return true if the square has no light and no object
 	 */
 	public boolean isEmpty(int fil, int col) {
-            return getAkariState()[fil][col] == V;
+            return boardState[fil][col] == V;
 	}
 
 	/**
@@ -97,8 +98,8 @@ public class Akari {
 	public int numberOfLanterns() {
 		int lanterns = 0;
 		
-		for (int row = 0; row < getAkariState().length; row++) {
-			for (int col = 0; col < getAkariState()[0].length; col++) {
+		for (int row = 0; row < boardState.length; row++) {
+			for (int col = 0; col < boardState[0].length; col++) {
 				if (isLantern(row, col)) {
 					lanterns++;
 				}
@@ -118,12 +119,43 @@ public class Akari {
 
 		for (int row = 0; row < getNrows(); row++) {
 			for (int col = 0; col < getNcols(); col++) {
-				if (isEmpty(row, col)) {
+				if (isEmpty(row, col) && isValid(row,col)) {
 					movList.add(new Pair<Integer, Integer>(row, col));
 				}
 			}
 		}
 		return movList;
+	}
+
+	//check if any of the adjacent squares is a condition block satisfied
+	public boolean isValid(int row,int col){
+		boolean valid = true;
+		// Left
+		if (col > 0) {
+			if (isConditionBlock(row, col - 1) && condBlockSatisfied(row,col -1)) {
+				valid = false;
+			}
+		}
+		// Right
+		if (col < getNcols() -1) {
+			if (isConditionBlock(row, col +1) && condBlockSatisfied(row,col +1)) {
+				valid = false;
+			}
+		}
+		// Top
+		if (row > 0) {
+			if (isConditionBlock(row -1, col) && condBlockSatisfied(row -1,col)) {
+				valid = false;
+			}
+		}
+		// Bot
+		if (row < getNrows() -1) {
+			if (isConditionBlock(row +1, col) && condBlockSatisfied(row +1,col)) {
+				valid = false;
+			}
+		}
+
+		return valid;
 	}
 
 	/**
@@ -235,7 +267,6 @@ public class Akari {
 		boolean goal = true;
 
 		for(int x= 0 ;goal && x < getNrows();x++) {
-
 			for(int y=0 ;goal && y < getNcols();y++) {
 
 				if (isEmpty(x, y))
@@ -317,10 +348,10 @@ public class Akari {
 		System.out.println();
 
 
-		for (int fila = 0; fila < getAkariState().length; fila++) {
+		for (int fila = 0; fila < boardState.length; fila++) {
 			System.out.print("|");
-			for (int col = 0; col < getAkariState()[0].length; col++) {
-			    int c = getAkariState()[fila][col];
+			for (int col = 0; col < boardState[0].length; col++) {
+			    int c = boardState[fila][col];
 				switch (c){
                     case 5:
                         System.out.print("■ ");//imprime bloque
@@ -348,15 +379,36 @@ public class Akari {
 
 	}
 
+
+	public int lightColumnsHeuristic(){
+
+		int steps = 0;
+		boolean iluminated = true;
+		for(int col=0; col<getNcols();col++){
+			iluminated = true;
+			for (int row=0;row<getNrows();row++){
+				if (isEmpty(row,col) && isValid(row,col)) {
+					iluminated = false;
+				}
+			}
+			if (!iluminated)
+				steps++;
+		}
+		return steps;
+
+
+	}
+
 	/**
 	 *
 	 * @return the number of light and lantern squares as an integuer
+	 *
 	 */
 	public int getTotalLight(){
 		int light = 0;
 		for(int row=0; row<getNrows();row++){
 			for (int col=0;col<getNcols();col++){
-				int state = getAkariState()[row][col];
+				int state = boardState[row][col];
 				if (state == L || state == I)
 					light++;
 			}
@@ -364,86 +416,135 @@ public class Akari {
 		return light;
 	}
 
-
-	public int OnlyOptionHeuristic(){
-		int puntuation = 0;
-		for(int row=0; row<getNrows();row++){
-			for (int col=0;col<getNcols();col++){
-				if (isEmpty(row,col ))
-					puntuation += 10;
-
-				if (isLight(row,col))
-					puntuation += 5;
-
-				if(isConditionBlock(row,col))
-					puntuation += onlyOptionBlock_Satisfied(row,col);
-
-			}
-		}
-		return puntuation;
-	}
-
-	public int ForbiddenPathHeuristic(){
-		int puntuation = 0;
+	public int getTotalEmpty(){
+		int light = 0;
 		for(int row=0; row<getNrows();row++){
 			for (int col=0;col<getNcols();col++){
 				if (isEmpty(row,col))
-					puntuation += 5;
-				else if (isLight(row,col))
-					puntuation += 2;
-				else if (satisfiedConditionBlock(row,col))
-					puntuation += 0;
-				else if (overloadConditionBlock(row,col))
-					puntuation += 500;
-
-
+					light++;
 			}
 		}
-		return puntuation;
+		return light;
+	}
+
+
+	public int HeuristicSquareRoot(){
+		int steps = getTotalEmpty();
+		int min = Math.min(getNcols(),getNrows());
+
+		while(steps > min){
+			steps = (int) Math.sqrt(steps);
+		}
+		return steps;
 	}
 
 
 	/**
 	 *
-	 * @param row
-	 * @param col
-	 *
-	 * @return true if the block has more adjacent lanterns than his condition, false on the contrary
 	 */
-	public boolean overloadConditionBlock(int row, int col){
-		int adjacent_lanterns = 0;
-		int puntuation = 0;
-		boolean overload = false;
-
+	void auxMinCondHeuristic(LinkedList<Pair<Integer,Integer>> List, int row, int col){
 
 		// Left
 		if (col > 0) {
-			if (isLantern(row, col - 1)) {
-				adjacent_lanterns++;
+			if (isEmpty(row,col-1)) {
+				Pair<Integer,Integer> a =new Pair<>(row,col-1);
+				if(List.contains(a)){
+					List.remove(a);
+				}
+				else List.addLast(a);
 			}
 		}
 		// Right
 		if (col < getNcols() -1) {
-			if (isLantern(row,col + 1)) {
-				adjacent_lanterns++;
+			if (isEmpty(row,col+1)) {
+				Pair<Integer,Integer> a =new Pair<Integer,Integer>(row,col+1);
+				if(List.contains(a)){
+					List.remove(a);
+				}
+				else List.addLast(a);
 			}
 		}
 		// Top
 		if (row > 0) {
-			if (isLantern(row - 1, col)) {
-				adjacent_lanterns++;
+			if (isEmpty(row - 1,col)) {
+				Pair<Integer,Integer> a =new Pair<Integer,Integer>(row -1,col);
+				if(List.contains(a)){
+					List.remove(a);
+				}
+				else List.addLast(a);
 			}
 		}
 		// Bot
 		if (row < getNrows() -1) {
-			if (isLantern(row + 1, col)) {
-				adjacent_lanterns++;
+			if (isEmpty(row +1,col)) {
+				Pair<Integer,Integer> a =new Pair<Integer,Integer>(row +1,col);
+				if(List.contains(a)){
+					List.remove(a);
+				}
+				else List.addLast(a);
 			}
 		}
-		if (boardState[row][col] < adjacent_lanterns) {
-			overload = true;
+
+
+	}
+
+
+	/**
+	 * devuelve el número de pasos mínimo correspondiente a las linternas que quedan por poner
+	 * alrededor de los bloques de condición
+	 *
+	 * @return
+	 */
+	public int MinCondHeursitic() {
+		int steps = 0;
+		LinkedList<Pair<Integer, Integer>> List = new LinkedList<Pair<Integer, Integer>>();
+		for (int row = 0; row < getNrows(); row++) {
+			for (int col = 0; col < getNcols(); col++) {
+				if (isConditionBlock(row, col) && !satisfiedConditionBlock(row, col)) {
+					steps += remainingLanternsCB(row, col);
+					//auxMinCondHeuristic(List, row, col);
+				}
+			}
+
 		}
-		return overload;
+		return List.size();
+	}
+
+
+	/**
+	 * suponiendo que el bloque sea un bloque de condición y no esté satisfecho devuelve
+	 * el número de linternas que todavía faltan por poner
+	 * @param row
+	 * @param col
+	 * @return
+	 */
+	public int remainingLanternsCB(int row, int col){
+		int adjacent_lanterns = 0;
+
+
+		// Left
+		if (col > 0)
+			if (isLantern(row, col - 1))
+				adjacent_lanterns++;
+
+		// Right
+		if (col < getNcols() -1)
+			if (isLantern(row,col + 1))
+				adjacent_lanterns++;
+
+		// Top
+		if (row > 0)
+			if (isLantern(row - 1, col))
+				adjacent_lanterns++;
+
+		// Bot
+		if (row < getNrows() -1)
+			if (isLantern(row + 1, col))
+				adjacent_lanterns++;
+
+
+
+		return boardState[row][col] - adjacent_lanterns;
 
 	}
 
@@ -569,10 +670,10 @@ public class Akari {
 		// parte espec�fica del equals
 
 		Akari aux = (Akari) o;
-		while (iguales && fila < getAkariState().length) {
+		while (iguales && fila < boardState.length) {
 
-			while (iguales && col < getAkariState()[0].length) {
-				iguales = (getAkariState()[fila][col] == aux.getAkariState()[fila][col]);
+			while (iguales && col < boardState[0].length) {
+				iguales = (boardState[fila][col] == aux.boardState[fila][col]);
 				col++;
 			}
 			col = 0;
@@ -586,9 +687,9 @@ public class Akari {
 	 */
 	public int hashCode() {
 		int result = 17;
-		for (int fila = 0; fila < getAkariState().length; fila++) {
-			for (int col = 0; col < getAkariState()[0].length; col++) {
-				result += ((result * 37 * getAkariState()[fila][col]) + fila) * col;
+		for (int fila = 0; fila < boardState.length; fila++) {
+			for (int col = 0; col < boardState[0].length; col++) {
+				result += ((result * 37 * boardState[fila][col]) + fila) * col;
 
 			}
 		}

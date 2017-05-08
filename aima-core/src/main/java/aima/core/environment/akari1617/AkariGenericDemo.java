@@ -13,8 +13,6 @@ import aima.core.search.framework.problem.ResultFunction;
 import aima.core.search.framework.qsearch.GraphSearch;
 import aima.core.search.informed.AStarSearch;
 import aima.core.search.informed.GreedyBestFirstSearch;
-import aima.core.search.uninformed.BreadthFirstSearch;
-import aima.core.search.uninformed.DepthFirstSearch;
 
 public class AkariGenericDemo {
 	public final static int B = 5;// B de bloque para indicar que es un bloque
@@ -36,14 +34,73 @@ public class AkariGenericDemo {
 	 *
 	 * 
 	 */
+									//Nivel con soluci�n UNICA optima en 5 pasos
+	/*private static int[][] LIGHTCROSS = {
+			{ B,1,V,V,B,B},
+			{ B,V,V,V,V,0},
+			{ V,V,V,V,V,V},
+			{ V,V,V,V,V,V},
+			{ V,V,1,2,V,V}
+			};
 
-	// Variaci�n de nivel simple First Step 4 con soluci�n optima en 5 pasos
+	*/
+									//Nivel con soluci�n optima en 5 pasos variables
+	/*private static int[][] LIGHTCROSS = {
+			{ B,1,V,V,B,B},
+			{ B,V,V,V,V,0},
+			{ V,V,V,B,V,V},
+			{ V,V,V,V,V,V},
+			{ V,V,B,1,V,V}
+			};
+	*/
+								//Nivel con soluci�n UNICA optima en 6 pasos
+									private static int[][] AKARI = {
+											{ 1,V,V,V,V,V},
+											{ V,V,V,2,V,V},
+											{ V,B,0,V,V,V},
+											{ V,B,V,V,B,1},
+											{ V,B,V,V,V,V},
+											{ V,B,2,V,V,V}
+									};
+
+	//Nivel con soluci�n optima en 6 pasos variables
+	/*	private static int[][] AKARI = {
+			{ B,V,V,V,1,V},
+			{ V,V,V,V,B,B},
+			{ V,V,V,V,V,V},
+			{ V,V,V,V,V,V},
+			{ V,V,V,V,2,V},
+			{ V,V,V,V,V,V}
+			};*/
+
+	//Nivel con soluci�n UNICA optima en 7 pasos
+	/*private static int[][] AKARI = {
+			{ B,V,V,V,V,2},
+		    { 0,V,V,V,V,V},
+		    { V,V,V,V,B,V},
+		    { V,V,V,V,V,V},
+		    { B,V,2,V,V,1},
+		    { V,V,B,V,B,B}
+	};*/
+	//Nivel con soluci�n UNICA optima en 8 pasos
+	/*private static int[][] AKARI ={
+		   { 1,V,V,V,V,V},
+		   { V,V,V,B,2,V},
+		   { V,V,V,B,B,V},
+		   { V,V,V,V,V,V},
+		   { V,0,V,V,V,V},
+		   { V,V,V,V,V,V},
+		   { V,V,3,V,V,V},
+		   { V,V,V,V,V,1}
+	};*/
+
+	/*// Variaci�n de nivel simple First Step 4 con soluci�n optima en 5 pasos
 	private static int[][] AKARI = {
 			{ B, 1, V, V, B, B },
 			{ B, V, V, V, V, 0 },
 			{ V, V, V, B, V, V },
 			{ V, V, V, V, V, V },
-			{ V, V, B, 1, V, V } };
+			{ V, V, B, 1, V, V } };*/
 	/**
 	 * @param args
 	 */
@@ -80,57 +137,57 @@ public class AkariGenericDemo {
 				new BreadthFirstSearch(new GraphSearch()));*/
 
 		System.out.println("\n<------------------------>");
-		System.out.println("LightRatio con Avaricioso (Greedy Best First (Graph)");
+		System.out.println("LightColumns con Avaricioso (Greedy Best First (Graph)");
 		System.out.println("<------------------------>");
 		Akari = new Akari(AKARI);
 		uninformedAndInformedSearchDemo(Akari, AkariFunctionFactory.getActionsFunction(),
 				AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
-				new GreedyBestFirstSearch(new GraphSearch(), new HeuristicaLightRatio()));
+				new GreedyBestFirstSearch(new GraphSearch(), new HeuristicLightColumns()));
 
 		System.out.println("\n<------------------------>");
-		System.out.println("LightRatio con A* (Graph)");
+		System.out.println("LightColumns con A* (Graph)");
 		System.out.println("<------------------------>");
 		Akari = new Akari(AKARI);
 		uninformedAndInformedSearchDemo(Akari, AkariFunctionFactory.getActionsFunction(),
 				AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
-				new AStarSearch(new GraphSearch(), new HeuristicaLightRatio()));
+				new AStarSearch(new GraphSearch(), new HeuristicLightColumns()));
 
 		 System.out.println("\n<------------------------>");
-		 System.out.println("OnlyOptionsBlock con Avaricioso (Greedy Best First (Graph)");
+		 System.out.println("SquareRoot con Avaricioso (Greedy Best First (Graph)");
 		 System.out.println("<------------------------>");
 		 Akari = new Akari(AKARI);
 		 uninformedAndInformedSearchDemo(Akari,
 		 AkariFunctionFactory.getActionsFunction(),
 		 AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
-		 new GreedyBestFirstSearch(new GraphSearch(), new HeuristicaOnlyOptionBlocks()));
+		 new GreedyBestFirstSearch(new GraphSearch(), new HeuristicSquareRoot()));
 
 
 		 System.out.println("\n<------------------------>");
-		 System.out.println("OnlyOptionsBlock con A* (Graph)");
+		 System.out.println("SquareRoot con A* (Graph)");
 		 System.out.println("<------------------------>");
 		 Akari = new Akari(AKARI);
 		 uninformedAndInformedSearchDemo(Akari,
 		 AkariFunctionFactory.getActionsFunction(),
 		 AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
-		 new AStarSearch(new GraphSearch(), new HeuristicaOnlyOptionBlocks()));
+		 new AStarSearch(new GraphSearch(), new HeuristicSquareRoot()));
 
 		System.out.println("\n<------------------------>");
-		 System.out.println("ForbiddenPath con Avaricioso (Greedy Best First (Graph)");
+		 System.out.println("MinCondBlock con Avaricioso (Greedy Best First (Graph)");
 		 System.out.println("<------------------------>");
 		 Akari = new Akari(AKARI);
 		 uninformedAndInformedSearchDemo(Akari,
 		 AkariFunctionFactory.getActionsFunction(),
 		 AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
-		 new GreedyBestFirstSearch(new GraphSearch(), new HeuristicaForbiddenPath()));
+		 new GreedyBestFirstSearch(new GraphSearch(), new HeuristicMinCondBlock()));
 
 		 System.out.println("\n<------------------------>");
-		 System.out.println("ForbiddenPath con A* (Graph)");
+		 System.out.println("MinCondBlock con A* (Graph)");
 		 System.out.println("<------------------------>");
 		 Akari = new Akari(AKARI);
 		 uninformedAndInformedSearchDemo(Akari,
 		 AkariFunctionFactory.getActionsFunction(),
 		 AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
-		 new AStarSearch(new GraphSearch(), new HeuristicaForbiddenPath()));
+		 new AStarSearch(new GraphSearch(), new HeuristicMinCondBlock()));
 
 		// System.out.println("\n<------------------------>");
 		 //System.out.println("Heur�sticaD con Avaricioso (Greedy Best First (Graph)");
@@ -180,7 +237,7 @@ public class AkariGenericDemo {
 			printActions(agent.getActions());
 			printInstrumentation(agent.getInstrumentation());
 			printTimeExecution(timeI, timeF);
-			printGraphicActions(agent.getActions(), initialState);// -> M�todo
+		//	printGraphicActions(agent.getActions(), initialState);// -> M�todo
 			// opcional para ver el resultado al detalle de forma "gr�fica"
 			printLastActions(agent.getActions(), initialState);// -> M�todo
 																// opcional para

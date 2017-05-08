@@ -7,7 +7,7 @@ import aima.core.util.datastructure.Pair;
 //ser� muy �til tambi�n para mostrar la soluci�n del problema
 public class AkariAction extends DynamicAction {
 
-	public static final String ACCION_AKARI = "accionAkari";
+	public static final String ACCION_AKARI = "InsertLantern";
 
 	/**
 	 * 
