@@ -191,23 +191,23 @@ public class AkariGenericDemo {
 		 AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
 		 new AStarSearch(new GraphSearch(), new HeuristicMinCondBlock()));
 
-		// System.out.println("\n<------------------------>");
-		 //System.out.println("Heur�sticaD con Avaricioso (Greedy Best First (Graph)");
-		// System.out.println("<------------------------>");
-		// Akari = new Akari(AKARI);
-		// uninformedAndInformedSearchDemo(Akari,
-		// AkariFunctionFactory.getActionsFunction(),
-		// AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
-		// new GreedyBestFirstSearch(new GraphSearch(), new HeuristicaD()));
-		//
-		// System.out.println("\n<------------------------>");
-		// System.out.println("Heur�sticaD con A* (Graph)");
-		// System.out.println("<------------------------>");
-		// Akari = new Akari(AKARI);
-		// uninformedAndInformedSearchDemo(Akari,
-		// AkariFunctionFactory.getActionsFunction(),
-		// AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
-		// new AStarSearch(new GraphSearch(), new HeuristicaD()));
+		System.out.println("\n<------------------------>");
+		 System.out.println("MaxBorder con Avaricioso (Greedy Best First (Graph)");
+		 System.out.println("<------------------------>");
+		 Akari = new Akari(AKARI);
+		 uninformedAndInformedSearchDemo(Akari,
+		 AkariFunctionFactory.getActionsFunction(),
+		 AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
+		 new GreedyBestFirstSearch(new GraphSearch(), new HeuristicMaxBorder()));
+
+		 System.out.println("\n<------------------------>");
+		 System.out.println("MaxBorder con A* (Graph)");
+		 System.out.println("<------------------------>");
+		 Akari = new Akari(AKARI);
+		 uninformedAndInformedSearchDemo(Akari,
+		 AkariFunctionFactory.getActionsFunction(),
+		 AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
+		 new AStarSearch(new GraphSearch(),new HeuristicMaxBorder()));
 
 	}
 
