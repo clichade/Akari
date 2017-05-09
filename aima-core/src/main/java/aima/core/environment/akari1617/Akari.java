@@ -438,7 +438,7 @@ public class Akari {
 				}
 				else {
 					List.addLast(a);
-					freqList.addLast(1);
+					freqList.addLast(0);
 				}
 			}
 		}
@@ -453,7 +453,7 @@ public class Akari {
 				}
 				else {
 					List.addLast(a);
-					freqList.addLast(1);
+					freqList.addLast(0);
 				}
 			}
 		}
@@ -468,7 +468,7 @@ public class Akari {
 				}
 				else {
 					List.addLast(a);
-					freqList.addLast(1);
+					freqList.addLast(0);
 				}
 			}
 		}
