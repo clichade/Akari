@@ -13,6 +13,8 @@ import aima.core.search.framework.problem.ResultFunction;
 import aima.core.search.framework.qsearch.GraphSearch;
 import aima.core.search.informed.AStarSearch;
 import aima.core.search.informed.GreedyBestFirstSearch;
+import aima.core.search.uninformed.BreadthFirstSearch;
+import aima.core.search.uninformed.DepthFirstSearch;
 
 public class AkariGenericDemo {
 	public final static int B = 5;// B de bloque para indicar que es un bloque
@@ -35,7 +37,7 @@ public class AkariGenericDemo {
 	 * 
 	 */
 									//Nivel con soluci�n UNICA optima en 5 pasos
-	/*private static int[][] LIGHTCROSS = {
+	private static int[][] AKARI = {
 			{ B,1,V,V,B,B},
 			{ B,V,V,V,V,0},
 			{ V,V,V,V,V,V},
@@ -43,7 +45,7 @@ public class AkariGenericDemo {
 			{ V,V,1,2,V,V}
 			};
 
-	*/
+
 									//Nivel con soluci�n optima en 5 pasos variables
 	/*private static int[][] LIGHTCROSS = {
 			{ B,1,V,V,B,B},
@@ -54,14 +56,14 @@ public class AkariGenericDemo {
 			};
 	*/
 								//Nivel con soluci�n UNICA optima en 6 pasos
-									private static int[][] AKARI = {
+						/*			private static int[][] AKARI = {
 											{ 1,V,V,V,V,V},
 											{ V,V,V,2,V,V},
 											{ V,B,0,V,V,V},
 											{ V,B,V,V,B,1},
 											{ V,B,V,V,V,V},
 											{ V,B,2,V,V,V}
-									};
+									};*/
 
 	//Nivel con soluci�n optima en 6 pasos variables
 	/*	private static int[][] AKARI = {
@@ -83,7 +85,7 @@ public class AkariGenericDemo {
 		    { V,V,B,V,B,B}
 	};*/
 	//Nivel con soluci�n UNICA optima en 8 pasos
-	/*private static int[][] AKARI ={
+/*	private static int[][] AKARI ={
 		   { 1,V,V,V,V,V},
 		   { V,V,V,B,2,V},
 		   { V,V,V,B,B,V},
@@ -119,14 +121,14 @@ public class AkariGenericDemo {
 
 		Akari Akari;
 
-	/*	 System.out.println("\n<------------------------>");
+		 System.out.println("\n<------------------------>");
 		 System.out.println("Profundidad (DFS (Graph))");
 		 System.out.println("<------------------------>");
 		 Akari = new Akari(AKARI);
 		 uninformedAndInformedSearchDemo(Akari,
 		 AkariFunctionFactory.getActionsFunction(),
-		 AkariFunctionFactory.getResultFunction(), new AkariGoalTest(), new
-		 DepthFirstSearch(new GraphSearch()));
+		 AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
+				 new DepthFirstSearch(new GraphSearch()));
 
 		System.out.println("\n<------------------------>");
 		System.out.println("Anchura (BFS (Graph))");
@@ -134,23 +136,23 @@ public class AkariGenericDemo {
 		Akari = new Akari(AKARI);
 		uninformedAndInformedSearchDemo(Akari, AkariFunctionFactory.getActionsFunction(),
 				AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
-				new BreadthFirstSearch(new GraphSearch()));*/
+				new BreadthFirstSearch(new GraphSearch()));
 
 		System.out.println("\n<------------------------>");
-		System.out.println("LightColumns con Avaricioso (Greedy Best First (Graph)");
+		System.out.println("MaxLight con Avaricioso (Greedy Best First (Graph)");
 		System.out.println("<------------------------>");
 		Akari = new Akari(AKARI);
 		uninformedAndInformedSearchDemo(Akari, AkariFunctionFactory.getActionsFunction(),
 				AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
-				new GreedyBestFirstSearch(new GraphSearch(), new HeuristicLightColumns()));
+				new GreedyBestFirstSearch(new GraphSearch(), new HeuristicMaxIlumination()));
 
 		System.out.println("\n<------------------------>");
-		System.out.println("LightColumns con A* (Graph)");
+		System.out.println("MaxLight con A* (Graph)");
 		System.out.println("<------------------------>");
 		Akari = new Akari(AKARI);
 		uninformedAndInformedSearchDemo(Akari, AkariFunctionFactory.getActionsFunction(),
 				AkariFunctionFactory.getResultFunction(), new AkariGoalTest(),
-				new AStarSearch(new GraphSearch(), new HeuristicLightColumns()));
+				new AStarSearch(new GraphSearch(), new HeuristicMaxIlumination()));
 
 		 System.out.println("\n<------------------------>");
 		 System.out.println("SquareRoot con Avaricioso (Greedy Best First (Graph)");

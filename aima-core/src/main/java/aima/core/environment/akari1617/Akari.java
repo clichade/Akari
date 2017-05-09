@@ -120,7 +120,7 @@ public class Akari {
 		for (int row = 0; row < getNrows(); row++) {
 			for (int col = 0; col < getNcols(); col++) {
 				if (isEmpty(row, col) && isValid(row,col)) {
-					movList.add(new Pair<Integer, Integer>(row, col));
+					movList.add(new Pair<>(row, col));
 				}
 			}
 		}
@@ -380,24 +380,7 @@ public class Akari {
 	}
 
 
-	public int lightColumnsHeuristic(){
 
-		int steps = 0;
-		boolean iluminated = true;
-		for(int col=0; col<getNcols();col++){
-			iluminated = true;
-			for (int row=0;row<getNrows();row++){
-				if (isEmpty(row,col) && isValid(row,col)) {
-					iluminated = false;
-				}
-			}
-			if (!iluminated)
-				steps++;
-		}
-		return steps;
-
-
-	}
 
 	/**
 	 *
@@ -417,14 +400,14 @@ public class Akari {
 	}
 
 	public int getTotalEmpty(){
-		int light = 0;
+		int empty = 0;
 		for(int row=0; row<getNrows();row++){
 			for (int col=0;col<getNcols();col++){
 				if (isEmpty(row,col))
-					light++;
+					empty++;
 			}
 		}
-		return light;
+		return empty;
 	}
 
 
