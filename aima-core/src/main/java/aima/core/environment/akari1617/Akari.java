@@ -8,25 +8,34 @@ import aima.core.util.math.Matrix;
 import com.sun.org.apache.xerces.internal.impl.xpath.XPath;
 
 public class Akari {
+
+	/**
+	 * variable que representa el problema
+	 */
+	private int boardState[][];
+
 	/**
 	 * bloque donde no puede pasar la luz , no necesita un número determinado de bombillas
 	 */
 	public final static int B = 5;
 
 	/**
-	 * la casilla está vacia, no tien bloque ni está iluminada ni tiene bombillac
+	 * la casilla está vacia, no tiene bloque ni está iluminada ni tiene bombillac
 	 */
-	public final static int V = 6;// V de vac�a para indicar que esa casilla no
-	// tiene bombilla ni est� iluminada ni es bloque
-	public final static int L = 7;// L para representar que esa casilla tiene
-	// una fuente de luz
-	public final static int I = 8;// I de iluminada para indicar que esa casilla
-	// est� iluminada por una fuente de luz
+	public final static int V = 6;
 
-	/* variable que va a representar el estado del problema */
-	private int boardState[][];
+	/**
+	 * bloque donde hay una linterna
+	 */
+	public final static int L = 7;
 
-	/* Contructores */
+	/**
+	 * bloque iluminado por una linterna
+	 */
+	public final static int I = 8;
+
+
+
 
 	/**
 	 * @param board ini the initial board state
@@ -113,7 +122,7 @@ public class Akari {
 	 * @return de la lista de casillas pulsables.
 	 */
 
-	public List<Pair<Integer, Integer>> getPosiblesMovimientos() {
+	public List<Pair<Integer, Integer>> getMovements() {
 
 		List<Pair<Integer, Integer>> movList = new ArrayList<>();
 
@@ -127,7 +136,13 @@ public class Akari {
 		return movList;
 	}
 
-	//check if any of the adjacent squares is a condition block satisfied
+
+    /**
+     * check if any of the adjacent squares of a spoot is a condition block completely satisfied
+     * @param row
+     * @param col
+     * @return
+     */
 	public boolean isValid(int row,int col){
 		boolean valid = true;
 		// Left
@@ -158,10 +173,10 @@ public class Akari {
 		return valid;
 	}
 
-	/**
-	 * 
-	 * @return devuelve la matriz del estado actual
-	 */
+    /**
+     * returns the actual state
+     * @return
+     */
 	public int[][] getAkariState() {
 		int[][] board = new int[boardState.length][boardState[0].length];
 		for (int row = 0; row < boardState.length; row++) {
@@ -172,40 +187,28 @@ public class Akari {
 		return board;
 	}
 
-	/**
-	 * 
-	 * @return da valor a la matriz
-	 */
-	public void setAkariState(int[][] T) {
-		for (int row = 0; row < T.length; row++) {
-			for (int col = 0; col < T[0].length; col++) {
-				boardState[row][col] = T[row][col];
-			}
-		}
-	}
-
-	/**
-	 * Metodo que cambia el valor de una casilla
-	 * 
-	 * @param row
-	 *            Entero representativo de fila
-	 * @param col
-	 *            Entero representativo de columna
-	 */
-
+    /**
+     * insert a lantern in a square of the map if is empty
+     * @param row
+     * @param col
+     */
 	private void putLantern(int row, int col) {
 		if (isEmpty(row, col)) {
 			boardState[row][col] = L;
 		}
 	}
 
-	/**
-	 *
-	 * @return devuelve el valor numerico de una casilla si esta es numerada.
-	 */
-	public boolean isConditionBlock(int fil, int col) {
 
-		if (boardState[fil][col] <= 4 && boardState[fil][col] >= 0) {
+
+    /**
+     *
+     * @param row
+     * @param col
+     * @return true if in the coordenates there is a condition block,false on the contrary
+     */
+	public boolean isConditionBlock(int row, int col) {
+
+		if (boardState[row][col] <= 4 && boardState[row][col] >= 0) {
 			return true;
 		} else {
 			return false;
@@ -213,14 +216,12 @@ public class Akari {
 
 	}
 
-	/**
-	 * Metodo que cambia el valor de una casilla y de sus alrededores
-	 * 
-	 * @param row
-	 *            Entero representativo de fila
-	 * @param col
-	 *            Entero representativo de columna
-	 */
+
+    /**
+     * put a lantern in the specified square and extends the light of the lantern if able
+     * @param row
+     * @param col
+     */
 
 	public void turnOnLight(int row, int col) {
 		putLantern(row, col);
@@ -325,22 +326,15 @@ public class Akari {
 		return correcto;
 	}
 
-	/**
-	 * imprime estado del tablero
-     *  B = 5 B de bloque para indicar que es un bloque
-        donde no puede ir una fuente de luz ni
-        pasar luz
-
-        V = 6 V de vac�a para indicar que esa casilla no
-        tiene bombilla ni est� iluminada
-
-         L = 7  L para representar que esa casilla tiene
-        una fuente de luz
-
-        int I = 8 I de iluminada para indicar que esa casilla
-        est� iluminada por una fuente de luz
-     /*
-	 */
+    /**
+     * prints the actual state of the board:
+     *
+     ■=Block
+      =Empty
+     !=Lantern
+     *=Light
+   0-4=Condition Block
+     */
 	public void printCurrentState() {
 
 		for (int i= 0 ;i < getNcols();i++)
@@ -348,10 +342,10 @@ public class Akari {
 		System.out.println();
 
 
-		for (int fila = 0; fila < boardState.length; fila++) {
+		for (int row = 0; row < boardState.length; row++) {
 			System.out.print("|");
 			for (int col = 0; col < boardState[0].length; col++) {
-			    int c = boardState[fila][col];
+			    int c = boardState[row][col];
 				switch (c){
                     case 5:
                         System.out.print("■ ");//imprime bloque
@@ -422,9 +416,7 @@ public class Akari {
 	}
 
 
-	/**
-	 *
-	 */
+
 	void auxMinCondHeuristic(LinkedList<Pair<Integer,Integer>> List, int row, int col, LinkedList<Integer> freqList){
 		int index, freq;
 		// Left
@@ -555,6 +547,20 @@ public class Akari {
 		return boardState[row][col] - adjacent_lanterns;
 
 	}
+
+    /**
+     * HashCode
+     */
+    public int hashCode() {
+        int result = 17;
+        for (int fila = 0; fila < boardState.length; fila++) {
+            for (int col = 0; col < boardState[0].length; col++) {
+                result += ((result * 37 * boardState[fila][col]) + fila) * col;
+
+            }
+        }
+        return result;
+    }
 
 	public boolean satisfiedConditionBlock(int row, int col){
 		int adjacent_lanterns = 0;
@@ -691,17 +697,5 @@ public class Akari {
 		return iguales;
 	}
 
-	/**
-	 * HashCode
-	 */
-	public int hashCode() {
-		int result = 17;
-		for (int fila = 0; fila < boardState.length; fila++) {
-			for (int col = 0; col < boardState[0].length; col++) {
-				result += ((result * 37 * boardState[fila][col]) + fila) * col;
 
-			}
-		}
-		return result;
-	}
 }

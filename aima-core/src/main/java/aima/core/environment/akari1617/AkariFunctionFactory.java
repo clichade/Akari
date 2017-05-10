@@ -36,7 +36,7 @@ public class 	AkariFunctionFactory {
 
 			Akari Akari = (Akari) s;
 			// obtener movimientos
-			List<Pair<Integer, Integer>> movimientos = Akari.getPosiblesMovimientos();
+			List<Pair<Integer, Integer>> movimientos = Akari.getMovements();
 			// para cada movimiento valido crear accion y anadirla a conjunto
 			for (Pair<Integer, Integer> movimiento : movimientos)
 				actions.add(new AkariAction(AkariAction.ACCION_AKARI, movimiento));
